@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:age_processor/data/datastore/network/model/requests/upload_request.dart';
 import 'package:age_processor/data/repositories/auth/repository_impl.dart';
+import 'package:age_processor/ui/screens/result_screen.dart';
 import 'package:age_processor/ui/viewmodel/main_screen_viewmodel.dart';
 import 'package:age_processor/util/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record_mp3/record_mp3.dart';
@@ -23,12 +25,23 @@ class _MainScreenState extends State<MainScreen> {
   String recordFilePath;
   int i = 0;
   double percent;
+  FlutterSoundRecorder _recorder;
 
   @override
   initState() {
     super.initState();
+    _recorder = FlutterSoundRecorder();
+    
     _viewModel.basicRespStream.listen((value) {
-      AppUtils.showError(context, "Ок", "Файл ${value.file} был успешно загружен.");
+      AppUtils.showError(context, "Ок", "Файл ${value.file} был успешно загружен.", onSubmit: () => {
+        Navigator.of(context).pop(),
+         Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen(
+        id: value.id,
+        code: value.security_code
+      )))
+      }
+     
+      );
     })
     .onError((error) {
       AppUtils.showError(context, "Ошибка", error);
@@ -60,10 +73,12 @@ Future<bool> checkPermission() async {
       statusText = "Recording...";
       recordFilePath = await getFilePath();
       isComplete = false;
-      RecordMp3.instance.start(recordFilePath, (type) {
-        statusText = "Record error--->$type";
-        setState(() {});
-      });
+      await _recorder.openAudioSession();
+      await _recorder.startRecorder(codec: Codec.pcm16WAV, toFile: recordFilePath);
+      // RecordMp3.instance.start(recordFilePath, (type) {
+      //   statusText = "Record error--->$type";
+      //   setState(() {});
+      // });
     } else {
       statusText = "No microphone permission";
     }
@@ -86,23 +101,25 @@ Future<bool> checkPermission() async {
     }
   }
 
-  void stopRecord() {
-    bool s = RecordMp3.instance.stop();
-    if (s) {
+  void stopRecord() async {
+    // bool s = RecordMp3.instance.stop();
+    await _recorder.stopRecorder();
+    // if (s) {
       statusText = "Record complete";
       isComplete = true;
+      await _recorder.closeAudioSession();
       setState(() {});
-    }
+    // }
     // print(File(recordFilePath));
   }
 
-  void resumeRecord() {
-    bool s = RecordMp3.instance.resume();
-    if (s) {
-      statusText = "Recording...";
-      setState(() {});
-    }
-  }
+  // void resumeRecord() {
+  //   bool s = RecordMp3.instance.resume();
+  //   if (s) {
+  //     statusText = "Recording...";
+  //     setState(() {});
+  //   }
+  // }
 
   
 
@@ -113,7 +130,7 @@ Future<bool> checkPermission() async {
     if (!d.existsSync()) {
       d.createSync(recursive: true);
     }
-    return sdPath + "/test_${i++}.mp3";
+    return sdPath + "/test_${i++}.wav";
   }
   
   @override

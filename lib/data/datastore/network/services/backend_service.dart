@@ -18,7 +18,10 @@ class BackendService {
     try {
       var response = await _networkService.request(
           request.endpoint, request.method, request.headers,
-          parameters: request.toJson());
+          parameters: request.toJson())
+          .catchError((error) {
+            print("Error is $error");
+          });
       baseResponse = BasicResponse.fromJson(response);
       return baseResponse;
     } catch (error) {

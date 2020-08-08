@@ -15,7 +15,7 @@ class UploadRequest implements BackendRequest {
 
   @JsonKey(ignore: true)
   @override
-  String endpoint = "/upload";
+  String endpoint = "/voice/upload";
 
   @JsonKey(ignore: true)
   @override
@@ -28,6 +28,6 @@ class UploadRequest implements BackendRequest {
   @JsonKey(ignore: true)
   @override
   Map<String, dynamic> toJson() => { 
-    "voice": MultipartFile.fromFileSync(filePath, filename: "record.mp3", contentType: MediaType("audio/mpeg", ".mp3"))
+    "voice": MultipartFile.fromFileSync(filePath, filename: "record.wav", contentType: MediaType("audio/mpeg", ".wav"))
   };
 }

@@ -11,12 +11,12 @@ class NetworkService {
       {Map<String, dynamic> parameters}) async {
     _dio.options.headers = headers;
     Response response;
-
+    print("parameters are $parameters");
     try {
       switch (method) {
         case HttpMethod.GET:
           {
-            response = await _dio.get(url);
+            response = await _dio.get(url, queryParameters: parameters);
           }
           break;
         case HttpMethod.POST:
@@ -30,9 +30,10 @@ class NetworkService {
           break;
       }
     } on DioError catch (error) {
+      print(error.request.queryParameters);
       return error.response.data;
     }
-    print(response.data);
+    // print(response.data);
     if (response != null) {
       // if (_successCodes.contains(response.statusCode)) {
       return response.data;
@@ -51,10 +52,10 @@ class NetworkService {
         AppUtils.percent.add(sent*100/total);
       });
       
-      print(response.data);
+      // print(response.data);
       return response.data;
     } on DioError catch (error) {
-      print(error.response.data);
+      // print(error.response.data);
     }
   }
 }

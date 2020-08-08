@@ -4,6 +4,10 @@ PODS:
   - Flutter (1.0.0)
   - flutter_rounded_progress_bar (0.0.1):
     - Flutter
+  - flutter_sound (0.0.1):
+    - Flutter
+    - mobile-ffmpeg-audio (= 4.3.2)
+  - mobile-ffmpeg-audio (4.3.2)
   - path_provider (0.0.1):
     - Flutter
   - path_provider_linux (0.0.1):
@@ -19,11 +23,16 @@ DEPENDENCIES:
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
   - Flutter (from `Flutter`)
   - flutter_rounded_progress_bar (from `.symlinks/plugins/flutter_rounded_progress_bar/ios`)
+  - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - record_mp3 (from `.symlinks/plugins/record_mp3/ios`)
+
+SPEC REPOS:
+  trunk:
+    - mobile-ffmpeg-audio
 
 EXTERNAL SOURCES:
   audioplayers:
@@ -32,6 +41,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_rounded_progress_bar:
     :path: ".symlinks/plugins/flutter_rounded_progress_bar/ios"
+  flutter_sound:
+    :path: ".symlinks/plugins/flutter_sound/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   path_provider_linux:
@@ -47,6 +58,8 @@ SPEC CHECKSUMS:
   audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_rounded_progress_bar: 3c650daa330585aa0c302889381734f2e676f000
+  flutter_sound: 208f0db5525b6b8cf08ca925a97c3034893835e0
+  mobile-ffmpeg-audio: 1c003d0918195bba4c21629d543e44e4b5e1e42d
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   path_provider_linux: 4d630dc393e1f20364f3e3b4a2ff41d9674a84e4
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
