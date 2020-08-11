@@ -7,36 +7,56 @@ import 'package:flutter/material.dart';
 import '../../data/datastore/network/model/responses/basic_response.dart';
 import '../../data/repositories/auth/repository_impl.dart';
 
-bool isStopped = false; //
-int count = 0;
-class ResultScreen extends StatelessWidget {
+
+class ResultScreen extends StatefulWidget {
 
   final int id;
   final String code;
 
   ResultScreen({this.id, this.code}) {
-    // InfoRequest request = InfoRequest(endpoint: "/info/$id/$code");
-    sec5Timer();
   }
+
+  @override
+  State<StatefulWidget> createState() => _ResultScreenState();
+
+}
+
+class _ResultScreenState extends State<ResultScreen> {
 
   ResultScreenViewmodel _viewmodel = ResultScreenViewmodel(repository: RepositoryImpl());
   
+  bool isStopped = false; //
+  int count = 0;
+
+  @override
+  initState() {
+    super.initState();
+    sec5Timer();
+  }
 
   sec5Timer() {
     Timer.periodic(Duration(seconds: 10), (timer) {
       if (isStopped) {
        timer.cancel();
       }
-      count++;
-      // var request = InfoRequest(endpoint: "/voice/info");
-      _viewmodel.getInfo(InfoRequest(code: code, id: "${id}"));
-      // _viewmodel.getInfo(InfoRequest(endpoint: "/info?id=$id&code=$code"));
+      setState(() {
+         count++;
+      });
+      _viewmodel.getInfo(InfoRequest(code: widget.code, id: "${widget.id}"));
    });
-}
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: ()  { 
+        setState(() {
+          isStopped = true;
+        });
+        Navigator.pop(context);
+        return Future.value(true);
+      },
+      child: Scaffold(
       appBar: AppBar(
         centerTitle: true,
           title: Text('Result'),
@@ -71,7 +91,7 @@ class ResultScreen extends StatelessWidget {
               ],
             ));
           })
-    );
+    ));
   }
 
 }

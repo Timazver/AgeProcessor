@@ -34,6 +34,13 @@ class _MainScreenState extends State<MainScreen> {
     
     _viewModel.basicRespStream.listen((value) {
       AppUtils.showError(context, "Ок", "Файл ${value.file} был успешно загружен.", onSubmit: () => {
+        setState(() {
+      Directory(recordFilePath).deleteSync(recursive: true);
+      statusText ="";
+      recordFilePath = "";
+      isComplete = false;
+      percent = null;
+    }),
         Navigator.of(context).pop(),
          Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen(
         id: value.id,
@@ -44,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
       );
     })
     .onError((error) {
-      AppUtils.showError(context, "Ошибка", error);
+      AppUtils.showError(context, "Ошибка", error.toString());
     });
 
     AppUtils.percent.listen((value) {
@@ -102,26 +109,13 @@ Future<bool> checkPermission() async {
   }
 
   void stopRecord() async {
-    // bool s = RecordMp3.instance.stop();
     await _recorder.stopRecorder();
-    // if (s) {
       statusText = "Record complete";
       isComplete = true;
       await _recorder.closeAudioSession();
       setState(() {});
-    // }
-    // print(File(recordFilePath));
   }
 
-  // void resumeRecord() {
-  //   bool s = RecordMp3.instance.resume();
-  //   if (s) {
-  //     statusText = "Recording...";
-  //     setState(() {});
-  //   }
-  // }
-
-  
 
   Future<String> getFilePath() async {
     Directory storageDirectory = await getApplicationDocumentsDirectory();
@@ -130,7 +124,7 @@ Future<bool> checkPermission() async {
     if (!d.existsSync()) {
       d.createSync(recursive: true);
     }
-    return sdPath + "/test_${i++}.wav";
+    return sdPath + "/test_record${i++}.wav";
   }
   
   @override
