@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:age_processor/data/datastore/network/model/requests/upload_request.dart';
 import 'package:age_processor/data/repositories/auth/repository_impl.dart';
 import 'package:age_processor/ui/screens/result_screen.dart';
+import 'package:age_processor/ui/styles/custom_textstyle.dart';
 import 'package:age_processor/ui/viewmodel/main_screen_viewmodel.dart';
+import 'package:age_processor/ui/widgets/main/text_block.dart';
+import 'package:age_processor/ui/widgets/pro_sign.dart';
 import 'package:age_processor/util/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
@@ -12,14 +15,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record_mp3/record_mp3.dart';
 
 class MainScreen extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => _MainScreenState();
-
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   String statusText = "";
   bool isComplete = false;
   String recordFilePath;
@@ -31,26 +31,26 @@ class _MainScreenState extends State<MainScreen> {
   initState() {
     super.initState();
     _recorder = FlutterSoundRecorder();
-    
+
     _viewModel.basicRespStream.listen((value) {
-      AppUtils.showError(context, "Ок", "Файл ${value.file} был успешно загружен.", onSubmit: () => {
-        setState(() {
-      Directory(recordFilePath).deleteSync(recursive: true);
-      statusText ="";
-      recordFilePath = "";
-      isComplete = false;
-      percent = null;
-    }),
-        Navigator.of(context).pop(),
-         Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen(
-        id: value.id,
-        code: value.security_code
-      )))
-      }
-     
-      );
-    })
-    .onError((error) {
+      AppUtils.showError(
+          context, "Ок", "Файл ${value.file} был успешно загружен.",
+          onSubmit: () => {
+                setState(() {
+                  Directory(recordFilePath).deleteSync(recursive: true);
+                  statusText = "";
+                  recordFilePath = "";
+                  isComplete = false;
+                  percent = null;
+                }),
+                Navigator.of(context).pop(),
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ResultScreen(
+                            id: value.id, code: value.security_code)))
+              });
+    }).onError((error) {
       AppUtils.showError(context, "Ошибка", error.toString());
     });
 
@@ -61,10 +61,10 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  MainScreenViewmodel _viewModel = MainScreenViewmodel(repository: RepositoryImpl());
+  MainScreenViewmodel _viewModel =
+      MainScreenViewmodel(repository: RepositoryImpl());
 
-   
-Future<bool> checkPermission() async {
+  Future<bool> checkPermission() async {
     if (!await Permission.microphone.isGranted) {
       PermissionStatus status = await Permission.microphone.request();
       if (status != PermissionStatus.granted) {
@@ -81,7 +81,8 @@ Future<bool> checkPermission() async {
       recordFilePath = await getFilePath();
       isComplete = false;
       await _recorder.openAudioSession();
-      await _recorder.startRecorder(codec: Codec.pcm16WAV, toFile: recordFilePath);
+      await _recorder.startRecorder(
+          codec: Codec.pcm16WAV, toFile: recordFilePath);
       // RecordMp3.instance.start(recordFilePath, (type) {
       //   statusText = "Record error--->$type";
       //   setState(() {});
@@ -110,12 +111,11 @@ Future<bool> checkPermission() async {
 
   void stopRecord() async {
     await _recorder.stopRecorder();
-      statusText = "Record complete";
-      isComplete = true;
-      await _recorder.closeAudioSession();
-      setState(() {});
+    statusText = "Record complete";
+    isComplete = true;
+    await _recorder.closeAudioSession();
+    setState(() {});
   }
-
 
   Future<String> getFilePath() async {
     Directory storageDirectory = await getApplicationDocumentsDirectory();
@@ -126,161 +126,181 @@ Future<bool> checkPermission() async {
     }
     return sdPath + "/test_record${i++}.wav";
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Age Processor'),
-        ),
+        backgroundColor: Colors.black,
         body: SingleChildScrollView(
-          child: Column(children: [
-          SizedBox(height: 30),
-           GestureDetector(
-                  child: Container(
-                    width: 200,
-                    height: 48.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.red.shade300),
-                    child: Center(
-                      child: Text(
-                        'Record',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  onTap: () async {
-                    startRecord();
-                  },
-                
-              ),
-              SizedBox(height: 20),
-              GestureDetector(
-                  child: Container(
-                    width: 200,
-                    height: 48.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green.shade300),
-                    child: Center(
-                      child: Text(
-                        'stop',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    stopRecord();
-                  },
-                ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Text(
-              statusText,
-              style: TextStyle(color: Colors.red, fontSize: 20),
-            ),
-          ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              _viewModel.uploadRecord(UploadRequest(filePath: recordFilePath));
-            },
             child: Container(
-              margin: EdgeInsets.only(top: 30),
-              alignment: AlignmentDirectional.center,
-              width: 100,
-              height: 50,
-              child: isComplete && recordFilePath != null
-                  ? Text(
-                      "Send",
-                      style: TextStyle(color: Colors.red, fontSize: 20),
-                    )
-                  : Container(),
-            ),
-          ),
-          percent != null ? RoundedProgressBar(
-            percent: percent,
-            childCenter: Text("${percent.toStringAsFixed(2)} %"),
-          ) : Container(),
-          SizedBox(height: 20),
-              GestureDetector(
-                  child: Container(
-                    width: 200,
-                    height: 48.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green.shade300),
-                    child: Center(
-                      child: Text(
-                        '+20',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    stopRecord();
-                  },
-                ),
-                SizedBox(height: 20),
-              GestureDetector(
-                  child: Container(
-                    width: 200,
-                    height: 48.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green.shade300),
-                    child: Center(
-                      child: Text(
-                        '+5',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    stopRecord();
-                  },
-                ),
-                SizedBox(height: 20),
-              GestureDetector(
-                  child: Container(
-                    width: 200,
-                    height: 48.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green.shade300),
-                    child: Center(
-                      child: Text(
-                        '-5',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    stopRecord();
-                  },
-                ),
-                SizedBox(height: 20),
-              GestureDetector(
-                  child: Container(
-                    width: 200,
-                    height: 48.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green.shade300),
-                    child: Center(
-                      child: Text(
-                        '-20',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    stopRecord();
-                  },
-                ),
-        ]),
-      ));
-  }
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.symmetric(horizontal: 17),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/bg.png"),
+                  alignment: Alignment.center,
+                  fit: BoxFit.fitWidth)),
+          child: Column(children: [
+            SizedBox(height: 30),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text("Monday, 10 August", style: CustomTextStyle.dateTitle),
+              ProSign()
+            ]),
+            SizedBox(height: 30),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Test your voice",
+                    style: CustomTextStyle.screenTitle)),
+            SizedBox(height: 60),
+            TextBlock(),
+            SizedBox(height: 50),
 
+            SizedBox(height: 50),
+            Center(child: Text("Powered by AgeProcessor AI", style: CustomTextStyle.textBlockSubtitle))
+            //  GestureDetector(
+            //         child: Container(
+            //           width: 200,
+            //           height: 48.0,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(10),
+            //             color: Colors.red.shade300),
+            //           child: Center(
+            //             child: Text(
+            //               'Record',
+            //               style: TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         ),
+            //         onTap: () async {
+            //           startRecord();
+            //         },
+
+            //     ),
+            //     SizedBox(height: 20),
+            //     GestureDetector(
+            //         child: Container(
+            //           width: 200,
+            //           height: 48.0,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(10),
+            //             color: Colors.green.shade300),
+            //           child: Center(
+            //             child: Text(
+            //               'stop',
+            //               style: TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         ),
+            //         onTap: () {
+            //           stopRecord();
+            //         },
+            //       ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 20.0),
+            //   child: Text(
+            //     statusText,
+            //     style: TextStyle(color: Colors.red, fontSize: 20),
+            //   ),
+            // ),
+            // GestureDetector(
+            //   behavior: HitTestBehavior.opaque,
+            //   onTap: () {
+            //     _viewModel.uploadRecord(UploadRequest(filePath: recordFilePath));
+            //   },
+            //   child: Container(
+            //     margin: EdgeInsets.only(top: 30),
+            //     alignment: AlignmentDirectional.center,
+            //     width: 100,
+            //     height: 50,
+            //     child: isComplete && recordFilePath != null
+            //         ? Text(
+            //             "Send",
+            //             style: TextStyle(color: Colors.red, fontSize: 20),
+            //           )
+            //         : Container(),
+            //   ),
+            // ),
+            // percent != null ? RoundedProgressBar(
+            //   percent: percent,
+            //   childCenter: Text("${percent.toStringAsFixed(2)} %"),
+            // ) : Container(),
+            // SizedBox(height: 20),
+            //     GestureDetector(
+            //         child: Container(
+            //           width: 200,
+            //           height: 48.0,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(10),
+            //             color: Colors.green.shade300),
+            //           child: Center(
+            //             child: Text(
+            //               '+20',
+            //               style: TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         ),
+            //         onTap: () {
+            //           stopRecord();
+            //         },
+            //       ),
+            //       SizedBox(height: 20),
+            //     GestureDetector(
+            //         child: Container(
+            //           width: 200,
+            //           height: 48.0,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(10),
+            //             color: Colors.green.shade300),
+            //           child: Center(
+            //             child: Text(
+            //               '+5',
+            //               style: TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         ),
+            //         onTap: () {
+            //           stopRecord();
+            //         },
+            //       ),
+            //       SizedBox(height: 20),
+            //     GestureDetector(
+            //         child: Container(
+            //           width: 200,
+            //           height: 48.0,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(10),
+            //             color: Colors.green.shade300),
+            //           child: Center(
+            //             child: Text(
+            //               '-5',
+            //               style: TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         ),
+            //         onTap: () {
+            //           stopRecord();
+            //         },
+            //       ),
+            //       SizedBox(height: 20),
+            //     GestureDetector(
+            //         child: Container(
+            //           width: 200,
+            //           height: 48.0,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(10),
+            //             color: Colors.green.shade300),
+            //           child: Center(
+            //             child: Text(
+            //               '-20',
+            //               style: TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         ),
+            //         onTap: () {
+            //           stopRecord();
+            //         },
+            //       ),
+          ]),
+        )));
+  }
 }
