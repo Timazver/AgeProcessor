@@ -8,14 +8,18 @@ part of 'info_request.dart';
 
 InfoRequest _$InfoRequestFromJson(Map<String, dynamic> json) {
   return InfoRequest(
-    // endpoint: json['endpoint'] as String,
+    code: json['code'] as String,
+    id: json['id'] as String,
   )
+    ..endpoint = json['endpoint'] as String
     ..headers = Map<String, String>.from(json['headers'] as Map)
     ..method = _$enumDecode(_$HttpMethodEnumMap, json['method']);
 }
 
 Map<String, dynamic> _$InfoRequestToJson(InfoRequest instance) =>
     <String, dynamic>{
+      'id': instance.id,
+      'code': instance.code,
       'endpoint': instance.endpoint,
       'headers': instance.headers,
       'method': _$HttpMethodEnumMap[instance.method],

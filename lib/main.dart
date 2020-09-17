@@ -1,11 +1,6 @@
-import 'dart:io';
-
 import 'package:age_processor/ui/screens/main_screen.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:record_mp3/record_mp3.dart';
+import 'package:permission_handler/permission_handler.dart' as permission;
 
 void main() => runApp(MyApp());
 
@@ -15,11 +10,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
+
+  @override
+  void initState() {
+    super.initState();
+    permission.Permission.microphone.request();
+
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MainScreen()
+      home: 
+      MainScreen(),
+      theme: ThemeData(
+        brightness: Brightness.dark
+      ),
     );
   }
 

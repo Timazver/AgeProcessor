@@ -2,6 +2,8 @@ PODS:
   - audioplayers (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_inappwebview (0.0.1):
+    - Flutter
   - flutter_rounded_progress_bar (0.0.1):
     - Flutter
   - flutter_sound (0.0.1):
@@ -14,21 +16,22 @@ PODS:
     - Flutter
   - path_provider_macos (0.0.1):
     - Flutter
-  - permission_handler (5.0.1):
+  - "permission_handler (5.0.1+1)":
     - Flutter
-  - record_mp3 (0.0.1):
+  - webview_flutter (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
   - Flutter (from `Flutter`)
+  - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - flutter_rounded_progress_bar (from `.symlinks/plugins/flutter_rounded_progress_bar/ios`)
   - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
-  - record_mp3 (from `.symlinks/plugins/record_mp3/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
   trunk:
@@ -39,6 +42,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/audioplayers/ios"
   Flutter:
     :path: Flutter
+  flutter_inappwebview:
+    :path: ".symlinks/plugins/flutter_inappwebview/ios"
   flutter_rounded_progress_bar:
     :path: ".symlinks/plugins/flutter_rounded_progress_bar/ios"
   flutter_sound:
@@ -51,20 +56,21 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_macos/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
-  record_mp3:
-    :path: ".symlinks/plugins/record_mp3/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
   audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_inappwebview: 69dfbac46157b336ffbec19ca6dfd4638c7bf189
   flutter_rounded_progress_bar: 3c650daa330585aa0c302889381734f2e676f000
   flutter_sound: 208f0db5525b6b8cf08ca925a97c3034893835e0
   mobile-ffmpeg-audio: 1c003d0918195bba4c21629d543e44e4b5e1e42d
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   path_provider_linux: 4d630dc393e1f20364f3e3b4a2ff41d9674a84e4
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
-  permission_handler: 7022f8972d2d85ce95c1040db945f28bdbfa45d1
-  record_mp3: 7d7d8131f591d1965f695bb90cecbb17adf3c29e
+  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
+  webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
 PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
 

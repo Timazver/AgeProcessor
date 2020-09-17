@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 
 class AppUtils {
 
-  static PublishSubject<double> percent = PublishSubject();
-  
   static void showError(BuildContext context, String title, String text, {void Function() onSubmit}) {
     showCupertinoDialog(
         context: context,

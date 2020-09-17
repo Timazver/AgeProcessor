@@ -1,5 +1,4 @@
 import 'package:age_processor/data/datastore/network/http_method.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 abstract class BackendRequest {
 

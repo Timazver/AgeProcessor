@@ -1,4 +1,4 @@
-package com.example.age_processor
+package com.ageprocessor.ageprocessor
 
 import io.flutter.embedding.android.FlutterActivity
 

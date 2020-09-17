@@ -18,7 +18,7 @@ class InfoRequest implements BackendRequest {
   String endpoint = "/voice/info";
 
   @override
-  Map<String, String> headers = BackendConfig.headers;
+  Map<String, String> headers = BackendConfig.authHeaders;
 
   @override
   HttpMethod method = HttpMethod.GET;

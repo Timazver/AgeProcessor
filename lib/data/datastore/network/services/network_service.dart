@@ -1,6 +1,5 @@
 import 'package:age_processor/data/datastore/network/config/backend_config.dart';
 import 'package:age_processor/data/datastore/network/http_method.dart';
-import 'package:age_processor/util/app_utils.dart';
 import 'package:dio/dio.dart';
 
 class NetworkService {
@@ -11,13 +10,10 @@ class NetworkService {
       {Map<String, dynamic> parameters}) async {
     _dio.options.headers = headers;
     Response response;
-    print("parameters are $parameters");
     try {
       switch (method) {
         case HttpMethod.GET:
-          {
-            response = await _dio.get(url, queryParameters: parameters);
-          }
+          response = await _dio.get(url, queryParameters: parameters);
           break;
         case HttpMethod.POST:
           response = await _dio.post(url, data: parameters);
@@ -30,10 +26,10 @@ class NetworkService {
           break;
       }
     } on DioError catch (error) {
-      print(error.request.queryParameters);
+      print(error);
       return error.response.data;
     }
-    // print(response.data);
+    print(response.data);
     if (response != null) {
       // if (_successCodes.contains(response.statusCode)) {
       return response.data;
@@ -45,17 +41,21 @@ class NetworkService {
   Future<dynamic> uploadRequest(
       String url, HttpMethod method, Map<String, String> headers,
       {FormData parameters}) async {
-    _dio.options.headers = headers;
+    //      _dio.options.headers = {
+    //   Headers.contentLengthHeader: parameters.length,
+    //   Headers.contentTypeHeader: "multipart/form-data"
+    // };
+    // print(_dio.options.headers);
     Response response;
     try {
-      response = await _dio.post(url, data: parameters, onSendProgress: (int sent, int total) {
-        AppUtils.percent.add(sent*100/total);
-      });
+      response = await _dio.post(url, data: parameters);
       
       // print(response.data);
       return response.data;
     } on DioError catch (error) {
-      // print(error.response.data);
+      print(error);
+      print(error.response.data);
+      return error.response.data;
     }
   }
 }

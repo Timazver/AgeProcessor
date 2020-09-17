@@ -35,10 +35,14 @@ class BackendService {
     try {
       var response = await _networkService.uploadRequest(
           request.endpoint, request.method, request.headers,
-          parameters: FormData.fromMap(request.toJson()));
+          parameters: FormData.fromMap(request.toJson()) )
+          .catchError((error) {
+            print("Error is $error");
+          });
       baseResponse = BasicResponse.fromJson(response);
       return baseResponse;
     } catch (error) {
+      print(error);
       return error;
     }
   }

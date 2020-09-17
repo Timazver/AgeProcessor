@@ -1,6 +1,3 @@
-
-import 'dart:wasm';
-
 import 'package:json_annotation/json_annotation.dart';
 part 'basic_response.g.dart';
 

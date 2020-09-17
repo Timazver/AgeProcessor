@@ -1,6 +1,3 @@
-
-import 'dart:convert';
-
 import 'package:age_processor/data/datastore/network/model/requests/info_request.dart';
 import 'package:age_processor/data/datastore/network/model/responses/basic_response.dart';
 import 'package:age_processor/data/datastore/network/model/requests/upload_request.dart';
