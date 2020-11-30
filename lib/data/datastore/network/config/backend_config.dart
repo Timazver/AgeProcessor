@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 class BackendConfig {
 
   static BaseOptions options = new BaseOptions(
-    baseUrl: "https://api.ageprocessor.com",
+    baseUrl: "https://api.revoiceapp.com",
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
